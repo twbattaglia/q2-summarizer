@@ -11,6 +11,6 @@ install:
   - conda create --yes -n test-env -c qiime2 python=$PYTHON_VERSION qiime seaborn biom-format nose flake8
   - source activate test-env
   - pip install .
-script:
-  - nosetests
-  - flake8 q2_summarizer setup.py
+#script:
+#  - nosetests
+#  - flake8 q2_summarizer setup.py
