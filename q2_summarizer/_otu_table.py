@@ -193,6 +193,7 @@ def otu_table(output_dir : str, table: biom.Table) -> None:
                   </div>
                   <div class="box-body">
                      <img class="img-responsive pad" src="q2-summarizer-resources/histogram.png">
+                     <a href="q2-summarizer-resources/histogram.png" class="btn btn-sm bg-maroon btn-flat pull-left">Open</a>
                   </div>
                 </div>
               </div>
@@ -222,14 +223,13 @@ def otu_table(output_dir : str, table: biom.Table) -> None:
                 </div>
               </div>
             </div>
-
           </section>
         </div>
       </div>
       <footer class="main-footer">
         <div class="container">
           <div class="pull-right hidden-xs">
-            <strong><a href="http://almsaeedstudio.com">Made with Admin LTE 2.3.6</a>.</strong>
+            <strong><a href="http://almsaeedstudio.com">Made with Admin LTE 2.3.6</a></strong>
           </div>
         </div>
       </footer>
