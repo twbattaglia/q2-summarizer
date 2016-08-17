@@ -16,7 +16,7 @@ plugin.visualizers.register_function(
     function=otu_table,
     inputs={'table': FeatureTable[Frequency]},
     parameters={},
-    name='Summarize OTU-table data.',
+    name='Visualize and summarize data',
     description='This visualizer produces an HTML visualization of two '
                 'key-value mappings, each sorted in alphabetical order by key.'
 )

@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import statistics
 
 
-def otu_table(output_dir: str, table: biom.Table) -> None:
+def otu_table(output_dir : str, table: biom.Table) -> None:
 
     # Set output directory location
     output = join(output_dir, 'q2-summarizer-resources/')
@@ -34,12 +34,6 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
 
     # Number of different OTU's
     total_counts = int(table.length(axis="observation"))
-
-    # Make histogram figure
-    #sns_plot = sns.distplot(depths, kde=False, rug=True)
-    #fig = sns_plot.get_figure()
-    #fig.savefig(join(output, "histogram.png"))
-    #histo_html = mpld3.fig_to_html(fig, d3_url=None, mpld3_url=None, no_extras=False, template_type='simple', figid=None, use_http=False)
 
     # Write HTML
     html = '''
@@ -258,14 +252,12 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
 
     # Save histogram file to disk
     sns.set_style("whitegrid")
-    sns_plot = sns.distplot(depths, kde = False, rug = True, hist = True, color = '#3498db')
-    sns_plot.set(xlabel = 'Sampling depths', ylabel = 'Frquency')
+    sns_plot = sns.distplot(depths, kde=False, rug=True, hist=True, color='#3498db')
+    sns_plot.set(xlabel='Sampling depths', ylabel='Frequency')
     fig = sns_plot.get_figure()
-    fig.savefig(join(output, "histogram.png"), dpi = 300)
+    fig.savefig(join(output, "histogram.png"), dpi=300)
 
     # Save rank abundance to directory
-    
-
 
     # Write HTML file to disk
     file = open(join(output_dir, 'index.html') ,'w')
