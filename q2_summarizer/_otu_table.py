@@ -35,6 +35,15 @@ def otu_table(output_dir : str, table: biom.Table) -> None:
     # Number of different OTU's
     total_counts = int(table.length(axis="observation"))
 
+    # Table density
+    density = round(table.get_table_density(), 2) * 100
+
+    # Raw counts
+    depths_table = pd.Series(counts_per_sample).to_frame()
+    depths_table.index.name = 'SampleID'
+    depths_table = depths_table.rename(columns = {0:'Depths'})
+    #depths_table = depths_table.sort('Depths', descending=1)
+
     # Write HTML
     html = '''
     <!DOCTYPE html>
@@ -123,8 +132,8 @@ def otu_table(output_dir : str, table: biom.Table) -> None:
               <div class="col-lg-3 col-xs-6">
                 <div class="small-box bg-green">
                   <div class="inner">
-                    <h3>''' + 'coming soon' + '''</h3>
-                    <p>Number of species</p>
+                    <h3>''' + str(density) + "%" + '''</h3>
+                    <p>Density of non-zeros</p>
                   </div>
                   <div class="icon">
                     <i class="ion ion-pie-graph"></i>
@@ -193,7 +202,7 @@ def otu_table(output_dir : str, table: biom.Table) -> None:
                   </div>
                   <div class="box-body">
                      <img class="img-responsive pad" src="q2-summarizer-resources/histogram.png">
-                     <a href="q2-summarizer-resources/histogram.png" class="btn btn-sm bg-maroon btn-flat pull-left">Open</a>
+                     <a href="q2-summarizer-resources/histogram.png" class="btn btn-sm bg-maroon btn-flat">Open</a>
                   </div>
                 </div>
               </div>
@@ -218,7 +227,7 @@ def otu_table(output_dir : str, table: biom.Table) -> None:
                     <h3 class="box-title">Sampling Depth Histogram</h3>
                   </div>
                   <div class="box-body">
-                     <p>table of depths </p>
+                     ''' + depths_table.to_html(classes=['table', 'table-bordered']) + '''
                   </div>
                 </div>
               </div>
