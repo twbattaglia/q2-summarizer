@@ -2,6 +2,9 @@
 [![Build Status](https://travis-ci.org/twbattaglia/q2-summarizer.svg?branch=master)](https://travis-ci.org/twbattaglia/q2-summarizer)  
 QIIME2 plugin for generating interactive summary data  
 
+## Example report
+http://htmlpreview.github.io/?https://github.com/twbattaglia/q2-summarizer/blob/master/example/index.html
+
 ## Installation
 See https://github.com/qiime2/qiime2/wiki/Installing-and-using-QIIME-2 for more information on how to set up a qiime2 environment
 ```bash
