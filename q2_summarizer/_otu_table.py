@@ -39,21 +39,45 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
 
     # Write HTML file to disk
     with open(join(output_dir, "index.html"), 'w') as html:
+
+        # Header
         html.write(_HEADER)
+
+        # Row 1
         html.write(_new_row())
-        html.write(_make_sbox(title= 'Number of samples', value = results['samples'], color = "red"))
-        html.write(_make_sbox(title= 'Number of OTUs', value = results['total_otu'], color = "orange"))
-        html.write(_make_sbox(title= 'Total sequencing depth', value = results['total_counts'], color = "yellow"))
-        html.write(_make_sbox(title= 'Denisty of non-zeros', value = results['density'], color = "green"))
+        html.write(_make_sbox(title= 'Number of samples',
+                              value = results['samples'],
+                              color = "red"))
+        html.write(_make_sbox(title= 'Number of OTUs',
+                              value = results['total_otu'],
+                              color = "orange"))
+        html.write(_make_sbox(title= 'Total sequencing depth',
+                              value = results['total_counts'],
+                              color = "yellow"))
+        html.write(_make_sbox(title= 'Density of non-zeros',
+                              value = results['density'],
+                              color = "green"))
         html.write(_end())
+
+        # Row 2
         html.write(_new_row())
-        html.write(_make_sbox(title = 'Mean', value = results['mean']))
-        html.write(_make_sbox(title = 'Median', value = results['median']))
-        html.write(_make_sbox(title= 'Range', value = range_value))
-        html.write(_make_sbox(title= 'Standard deviation', value = results['std']))
+        html.write(_make_sbox(title = 'Mean',
+                              value = results['mean']))
+        html.write(_make_sbox(title = 'Median',
+                              value = results['median']))
+        html.write(_make_sbox(title= 'Range',
+                              value = range_value))
+        html.write(_make_sbox(title= 'Standard deviation',
+                              value = results['std']))
         html.write(_end())
+
+        # Row 3 Plots
         html.write(_PLOTS)
+
+        # Row 4 Table
         html.write(_make_datatable(df))
+
+        # Footer
         html.write(_FOOTER)
 
 
@@ -64,9 +88,9 @@ def _get_summary_stats(table):
 
     depths = list(counts_per_sample.values())
     std = round(statistics.stdev(depths), 2)
-    total_otu = int(sum(depths))
+    total_counts = int(sum(depths))
     samples = int(len(depths))
-    total_counts = int(table.length(axis="observation"))
+    total_otu = int(table.length(axis="observation"))
     density = round(table.get_table_density(), 2) * 100
     depths = list(counts_per_sample.values())
 
@@ -74,7 +98,6 @@ def _get_summary_stats(table):
     depths_table.index.name = 'SampleID'
     depths_table = depths_table.reset_index()
 
-    # Place results in a dictionary
     results = {'mean': int(mean),
                'median': int(median),
                'minimum': int(minimum),
@@ -85,11 +108,12 @@ def _get_summary_stats(table):
                'total_counts': int(total_counts),
                'density': str(density) + "%",
                'depths': depths}
-
-    # Return data needed for plots
     return(results, depths_table)
 
-def _make_sbox(title = 'Title', value = 18, icon = 'ion-pie-graph', color = 'blue'):
+def _make_sbox(title = 'Title',
+               value = 18,
+               icon = 'ion-pie-graph',
+               color = 'blue'):
     return('''
             <div class="col-lg-3 col-xs-6">
                 <div class="small-box bg-''' + color + '''">
@@ -194,11 +218,14 @@ _PLOTS = '''
     <div class="box box-solid">
       <div class="box-header with-border">
         <h3 class="box-title">Sampling Depth Histogram</h3>
-        <a href="q2-summarizer-resources/histogram.png" class="btn btn-primary btn-sm pull-right" type="button">PNG</a>
-        <a href="q2-summarizer-resources/histogram.pdf" class="btn btn-primary btn-sm pull-right" type="button">PDF</a>
+        <a href="q2-summarizer-resources/histogram.png"
+        class="btn btn-primary btn-sm pull-right" type="button">PNG</a>
+        <a href="q2-summarizer-resources/histogram.pdf"
+        class="btn btn-primary btn-sm pull-right" type="button">PDF</a>
       </div>
       <div class="box-body">
-         <img class="img-responsive pad" src="q2-summarizer-resources/histogram.png">
+         <img class="img-responsive pad"
+         src="q2-summarizer-resources/histogram.png">
       </div>
     </div>
   </div>
@@ -208,7 +235,8 @@ _PLOTS = '''
         <h3 class="box-title">OTU Rank Abundance</h3>
       </div>
       <div class="box-body">
-         <img class="img-responsive pad" src="q2-summarizer-resources/rank_abundance.png">
+         <img class="img-responsive pad"
+         src="q2-summarizer-resources/rank_abundance.png">
       </div>
     </div>
   </div>
