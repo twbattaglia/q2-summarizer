@@ -39,7 +39,7 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
 
     # Write HTML file to disk
     with open(join(output_dir, "index.html"), 'w') as html:
-        html.write(_header)
+        html.write(_HEADER)
         html.write(_new_row())
         html.write(_make_sbox(title= 'Number of samples', value = results['samples'], color = "red"))
         html.write(_make_sbox(title= 'Number of OTUs', value = results['total_otu'], color = "orange"))
@@ -52,9 +52,9 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
         html.write(_make_sbox(title= 'Range', value = range_value))
         html.write(_make_sbox(title= 'Standard deviation', value = results['std']))
         html.write(_end())
-        html.write(_plots)
+        html.write(_PLOTS)
         html.write(_make_datatable(df))
-        html.write(_footer)
+        html.write(_FOOTER)
 
 
 def _get_summary_stats(table):
@@ -74,7 +74,6 @@ def _get_summary_stats(table):
     depths_table.index.name = 'SampleID'
     depths_table = depths_table.reset_index()
 
-
     # Place results in a dictionary
     results = {'mean': int(mean),
                'median': int(median),
@@ -90,7 +89,6 @@ def _get_summary_stats(table):
     # Return data needed for plots
     return(results, depths_table)
 
-
 def _make_sbox(title = 'Title', value = 18, icon = 'ion-pie-graph', color = 'blue'):
     return('''
             <div class="col-lg-3 col-xs-6">
@@ -105,6 +103,7 @@ def _make_sbox(title = 'Title', value = 18, icon = 'ion-pie-graph', color = 'blu
                 </div>
             </div>
     ''')
+
 
 def _make_datatable(table):
     return('''
@@ -131,7 +130,7 @@ def _end():
     return('''</div>''')
 
 
-_header = '''
+_HEADER = '''
 <!DOCTYPE html>
 <html>
 <head>
@@ -189,7 +188,7 @@ _header = '''
         <section class="content">
 '''
 
-_plots = '''
+_PLOTS = '''
 <div class="row">
   <div class="col-md-6">
     <div class="box box-solid">
@@ -216,7 +215,7 @@ _plots = '''
 </div>
 '''
 
-_footer = '''
+_FOOTER = '''
 </section>
 </div>
 </div>
