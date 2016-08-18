@@ -17,7 +17,7 @@ setup(
     install_requires=['qiime >= 2.0.0', 'pandas', 'biom-format', 'seaborn'],
     author="Thomas W. Battaglia",
     author_email="tb1280@nyu.edu",
-    description="Summarize and visualize your data.",
+    description="QIIME2 plugin for generating interactive summary data",
     entry_points={
         "qiime.plugins":
         ["q2-summarizer=q2_summarizer.plugin_setup:plugin"]
