@@ -1,0 +1,648 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>QIIME2-Summariser</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="q2-summarizer-resources/dist/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="q2-summarizer-resources/dist/plugins/datatables/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="q2-summarizer-resources/dist/css/font-awesome.min.css">
+  <link rel="stylesheet" href="q2-summarizer-resources/dist/css/ionicons.min.css">
+  <link rel="stylesheet" href="q2-summarizer-resources/dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="q2-summarizer-resources/dist/css/skins/_all-skins.min.css">
+</head>
+<body class="hold-transition skin-green layout-top-nav">
+<div class="wrapper">
+  <header class="main-header">
+    <nav class="navbar navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="http://qiime.org/" class="navbar-brand">
+            <b>QIIME2-</b>Summarizer
+          </a>
+          <button type="button"
+                  class="navbar-toggle collapsed"
+                  data-toggle="collapse"
+                  data-target="#navbar-collapse">
+            <i class="fa fa-bars"></i>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li>
+                <a href="#preprocessing">FASTQ data</a>
+            </li>
+            <li>
+                <a href="#preprocessing">Joined PE reads</a>
+            </li>
+            <li>
+                <a href="#preprocessing">Split Libraries (de-multiplexing)</a>
+            </li>
+            <li>
+                <a href="#preprocessing">OTU-Picking</a>
+            </li>
+            <li class="active">
+            <a href="#otu">OTU Table <span class="sr-only">(current)</span></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <div class="content-wrapper">
+    <div class="container">
+        <section class="content">
+<div class="row">
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-red">
+                    <div class="inner">
+                        <h3>104</h3>
+                        <p>Number of samples</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-orange">
+                    <div class="inner">
+                        <h3>658</h3>
+                        <p>Number of OTUs</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-yellow">
+                    <div class="inner">
+                        <h3>33346</h3>
+                        <p>Total sequencing depth</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3>8.0%</h3>
+                        <p>Density of non-zeros</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                </div>
+            </div>
+    </div><div class="row">
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-blue">
+                    <div class="inner">
+                        <h3>320</h3>
+                        <p>Mean</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-blue">
+                    <div class="inner">
+                        <h3>314</h3>
+                        <p>Median</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-blue">
+                    <div class="inner">
+                        <h3>77-634</h3>
+                        <p>Range</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-blue">
+                    <div class="inner">
+                        <h3>99.77</h3>
+                        <p>Standard deviation</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                </div>
+            </div>
+    </div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="box box-solid">
+      <div class="box-header with-border">
+        <h3 class="box-title">Sampling Depth Histogram</h3>
+        <a href="q2-summarizer-resources/histogram.png"
+        class="btn btn-primary btn-sm pull-right" type="button">PNG</a>
+        <a href="q2-summarizer-resources/histogram.pdf"
+        class="btn btn-primary btn-sm pull-right" type="button">PDF</a>
+      </div>
+      <div class="box-body">
+         <img class="img-responsive pad"
+         src="q2-summarizer-resources/histogram.png">
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="box box-solid">
+      <div class="box-header with-border">
+        <h3 class="box-title">OTU Rank Abundance</h3>
+      </div>
+      <div class="box-body">
+         <img class="img-responsive pad"
+         src="q2-summarizer-resources/rank_abundance.png">
+      </div>
+    </div>
+  </div>
+</div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="box box-solid">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">Sampling Depths Table</h3>
+                  </div>
+                  <div class="box-body">
+                    <div class="dataTables_wrapper form-inline dt-bootstrap">
+                     <table border="1" class="dataframe table table-bordered table-hover datatables">
+  <thead>
+    <tr style="text-align: right;">
+      <th>SampleID</th>
+      <th>Depths</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>K1.A</td>
+      <td>190.0</td>
+    </tr>
+    <tr>
+      <td>K1.B</td>
+      <td>305.0</td>
+    </tr>
+    <tr>
+      <td>K1.C</td>
+      <td>300.0</td>
+    </tr>
+    <tr>
+      <td>K1.E</td>
+      <td>359.0</td>
+    </tr>
+    <tr>
+      <td>K1.G</td>
+      <td>352.0</td>
+    </tr>
+    <tr>
+      <td>K1.H</td>
+      <td>238.0</td>
+    </tr>
+    <tr>
+      <td>K1.J</td>
+      <td>157.0</td>
+    </tr>
+    <tr>
+      <td>K1.K</td>
+      <td>77.0</td>
+    </tr>
+    <tr>
+      <td>K1.L</td>
+      <td>360.0</td>
+    </tr>
+    <tr>
+      <td>K1.M</td>
+      <td>333.0</td>
+    </tr>
+    <tr>
+      <td>K1.N</td>
+      <td>221.0</td>
+    </tr>
+    <tr>
+      <td>K1.P</td>
+      <td>216.0</td>
+    </tr>
+    <tr>
+      <td>K1.Q</td>
+      <td>266.0</td>
+    </tr>
+    <tr>
+      <td>K1.R</td>
+      <td>318.0</td>
+    </tr>
+    <tr>
+      <td>K1.Shift.L</td>
+      <td>198.0</td>
+    </tr>
+    <tr>
+      <td>K1.Shift.R</td>
+      <td>313.0</td>
+    </tr>
+    <tr>
+      <td>K1.Space</td>
+      <td>336.0</td>
+    </tr>
+    <tr>
+      <td>K1.T</td>
+      <td>423.0</td>
+    </tr>
+    <tr>
+      <td>K1.V</td>
+      <td>301.0</td>
+    </tr>
+    <tr>
+      <td>K1.W</td>
+      <td>383.0</td>
+    </tr>
+    <tr>
+      <td>K1.X</td>
+      <td>299.0</td>
+    </tr>
+    <tr>
+      <td>K1.Y</td>
+      <td>348.0</td>
+    </tr>
+    <tr>
+      <td>K1.Z</td>
+      <td>158.0</td>
+    </tr>
+    <tr>
+      <td>K2.A</td>
+      <td>358.0</td>
+    </tr>
+    <tr>
+      <td>K2.B</td>
+      <td>294.0</td>
+    </tr>
+    <tr>
+      <td>K2.C</td>
+      <td>321.0</td>
+    </tr>
+    <tr>
+      <td>K2.D</td>
+      <td>357.0</td>
+    </tr>
+    <tr>
+      <td>K2.E</td>
+      <td>310.0</td>
+    </tr>
+    <tr>
+      <td>K2.Enter</td>
+      <td>313.0</td>
+    </tr>
+    <tr>
+      <td>K2.F</td>
+      <td>298.0</td>
+    </tr>
+    <tr>
+      <td>K2.G</td>
+      <td>447.0</td>
+    </tr>
+    <tr>
+      <td>K2.H</td>
+      <td>386.0</td>
+    </tr>
+    <tr>
+      <td>K2.K</td>
+      <td>125.0</td>
+    </tr>
+    <tr>
+      <td>K2.M</td>
+      <td>398.0</td>
+    </tr>
+    <tr>
+      <td>K2.N</td>
+      <td>308.0</td>
+    </tr>
+    <tr>
+      <td>K2.O</td>
+      <td>261.0</td>
+    </tr>
+    <tr>
+      <td>K2.P</td>
+      <td>388.0</td>
+    </tr>
+    <tr>
+      <td>K2.Q</td>
+      <td>161.0</td>
+    </tr>
+    <tr>
+      <td>K2.S</td>
+      <td>227.0</td>
+    </tr>
+    <tr>
+      <td>K2.Space</td>
+      <td>77.0</td>
+    </tr>
+    <tr>
+      <td>K2.V</td>
+      <td>435.0</td>
+    </tr>
+    <tr>
+      <td>K2.W</td>
+      <td>377.0</td>
+    </tr>
+    <tr>
+      <td>K2.X</td>
+      <td>281.0</td>
+    </tr>
+    <tr>
+      <td>K2.Y</td>
+      <td>283.0</td>
+    </tr>
+    <tr>
+      <td>K3.A</td>
+      <td>343.0</td>
+    </tr>
+    <tr>
+      <td>K3.B</td>
+      <td>360.0</td>
+    </tr>
+    <tr>
+      <td>K3.C</td>
+      <td>300.0</td>
+    </tr>
+    <tr>
+      <td>K3.D</td>
+      <td>269.0</td>
+    </tr>
+    <tr>
+      <td>K3.E</td>
+      <td>300.0</td>
+    </tr>
+    <tr>
+      <td>K3.Enter</td>
+      <td>432.0</td>
+    </tr>
+    <tr>
+      <td>K3.F</td>
+      <td>329.0</td>
+    </tr>
+    <tr>
+      <td>K3.G</td>
+      <td>388.0</td>
+    </tr>
+    <tr>
+      <td>K3.H</td>
+      <td>312.0</td>
+    </tr>
+    <tr>
+      <td>K3.I</td>
+      <td>419.0</td>
+    </tr>
+    <tr>
+      <td>K3.J</td>
+      <td>319.0</td>
+    </tr>
+    <tr>
+      <td>K3.K</td>
+      <td>294.0</td>
+    </tr>
+    <tr>
+      <td>K3.L</td>
+      <td>387.0</td>
+    </tr>
+    <tr>
+      <td>K3.M</td>
+      <td>273.0</td>
+    </tr>
+    <tr>
+      <td>K3.N</td>
+      <td>145.0</td>
+    </tr>
+    <tr>
+      <td>K3.O</td>
+      <td>339.0</td>
+    </tr>
+    <tr>
+      <td>K3.P</td>
+      <td>186.0</td>
+    </tr>
+    <tr>
+      <td>K3.Q</td>
+      <td>213.0</td>
+    </tr>
+    <tr>
+      <td>K3.R</td>
+      <td>160.0</td>
+    </tr>
+    <tr>
+      <td>K3.S</td>
+      <td>414.0</td>
+    </tr>
+    <tr>
+      <td>K3.Shift.L</td>
+      <td>331.0</td>
+    </tr>
+    <tr>
+      <td>K3.Shift.R</td>
+      <td>327.0</td>
+    </tr>
+    <tr>
+      <td>K3.Space</td>
+      <td>334.0</td>
+    </tr>
+    <tr>
+      <td>K3.T</td>
+      <td>399.0</td>
+    </tr>
+    <tr>
+      <td>K3.U</td>
+      <td>309.0</td>
+    </tr>
+    <tr>
+      <td>K3.V</td>
+      <td>315.0</td>
+    </tr>
+    <tr>
+      <td>K3.W</td>
+      <td>286.0</td>
+    </tr>
+    <tr>
+      <td>K3.X</td>
+      <td>137.0</td>
+    </tr>
+    <tr>
+      <td>K3.Y</td>
+      <td>379.0</td>
+    </tr>
+    <tr>
+      <td>K3.Z</td>
+      <td>294.0</td>
+    </tr>
+    <tr>
+      <td>M2.Index.L</td>
+      <td>286.0</td>
+    </tr>
+    <tr>
+      <td>M2.Index.R</td>
+      <td>251.0</td>
+    </tr>
+    <tr>
+      <td>M2.Middle.L</td>
+      <td>344.0</td>
+    </tr>
+    <tr>
+      <td>M2.Middle.R</td>
+      <td>385.0</td>
+    </tr>
+    <tr>
+      <td>M2.Pinky.L</td>
+      <td>248.0</td>
+    </tr>
+    <tr>
+      <td>M2.Pinky.R</td>
+      <td>311.0</td>
+    </tr>
+    <tr>
+      <td>M2.Ring.L</td>
+      <td>304.0</td>
+    </tr>
+    <tr>
+      <td>M2.Ring.R</td>
+      <td>279.0</td>
+    </tr>
+    <tr>
+      <td>M2.Thumb.L</td>
+      <td>346.0</td>
+    </tr>
+    <tr>
+      <td>M2.Thumb.R</td>
+      <td>256.0</td>
+    </tr>
+    <tr>
+      <td>M3.Index.L</td>
+      <td>284.0</td>
+    </tr>
+    <tr>
+      <td>M3.Index.R</td>
+      <td>330.0</td>
+    </tr>
+    <tr>
+      <td>M3.Middle.L</td>
+      <td>559.0</td>
+    </tr>
+    <tr>
+      <td>M3.Middle.R</td>
+      <td>373.0</td>
+    </tr>
+    <tr>
+      <td>M3.Pinky.L</td>
+      <td>378.0</td>
+    </tr>
+    <tr>
+      <td>M3.Pinky.R</td>
+      <td>470.0</td>
+    </tr>
+    <tr>
+      <td>M3.Ring.L</td>
+      <td>368.0</td>
+    </tr>
+    <tr>
+      <td>M3.Ring.R</td>
+      <td>389.0</td>
+    </tr>
+    <tr>
+      <td>M3.Thumb.L</td>
+      <td>252.0</td>
+    </tr>
+    <tr>
+      <td>M3.Thumb.R</td>
+      <td>401.0</td>
+    </tr>
+    <tr>
+      <td>M9.Index.L</td>
+      <td>208.0</td>
+    </tr>
+    <tr>
+      <td>M9.Index.R</td>
+      <td>601.0</td>
+    </tr>
+    <tr>
+      <td>M9.Middle.L</td>
+      <td>438.0</td>
+    </tr>
+    <tr>
+      <td>M9.Middle.R</td>
+      <td>634.0</td>
+    </tr>
+    <tr>
+      <td>M9.Pinky.L</td>
+      <td>457.0</td>
+    </tr>
+    <tr>
+      <td>M9.Pinky.R</td>
+      <td>303.0</td>
+    </tr>
+    <tr>
+      <td>M9.Ring.L</td>
+      <td>586.0</td>
+    </tr>
+    <tr>
+      <td>M9.Ring.R</td>
+      <td>345.0</td>
+    </tr>
+    <tr>
+      <td>M9.Thumb.L</td>
+      <td>298.0</td>
+    </tr>
+    <tr>
+      <td>M9.Thumb.R</td>
+      <td>513.0</td>
+    </tr>
+  </tbody>
+</table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+</section>
+</div>
+</div>
+<footer class="main-footer">
+<div class="container">
+<div class="pull-right hidden-xs">
+  <strong>
+    <a href="http://almsaeedstudio.com">Made with Admin LTE 2.3.6</a>
+  </strong>
+</div>
+</div>
+</footer>
+</div>
+
+<script src="q2-summarizer-resources/dist/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="q2-summarizer-resources/dist/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="q2-summarizer-resources/dist/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="q2-summarizer-resources/dist/bootstrap/js/bootstrap.min.js"></script>
+<script src="q2-summarizer-resources/dist/js/app.min.js"></script>
+
+<script>
+$(function () {
+    $(".datatables").DataTable();});
+</script>
+</body>
+</html>
