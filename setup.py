@@ -1,6 +1,6 @@
+import ast
 from setuptools import setup, find_packages
 import re
-import ast
 
 # version parsing from __init__ pulled from Flask's setup.py
 # https://github.com/mitsuhiko/flask/blob/master/setup.py
@@ -14,7 +14,10 @@ setup(
     name="q2-summarizer",
     version=version,
     packages=find_packages(),
-    install_requires=['qiime >= 2.0.0', 'pandas', 'biom-format', 'seaborn', 'jinja2'],
+    install_requires=['qiime >= 2.0.0',
+                      'pandas', 'biom-format',
+                      'seaborn',
+                      'jinja2'],
     author="Thomas W. Battaglia",
     author_email="tb1280@nyu.edu",
     description="QIIME2 plugin for generating interactive summary data",

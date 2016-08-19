@@ -23,57 +23,59 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
     copy_tree(join(current_dir_path, "dist/"), join(output, "dist/"))
 
     # Make depths dataframe html
-    depth_df = df.to_html(index = False, classes = ['table', 'table-bordered', 'table-hover', 'datatables'])
+    depth_df = df.to_html(
+        index=False,
+        classes=['table', 'table-bordered', 'table-hover', 'datatables'])
 
     # Make histogram plot and save to disk
     sns.set_style("whitegrid")
-    histogram_plot = sns.distplot(a = results['depths'],
-                                  kde = False,
-                                  rug = True,
-                                  hist = True,
+    histogram_plot = sns.distplot(a=results['depths'],
+                                  kde=False,
+                                  rug=True,
+                                  hist=True,
                                   color='#3498db')
     histogram_plot.set_title('Sampling Depths Distribution')
     histogram_plot.set_xlabel('Sampling Depth')
     histogram_plot.set_ylabel('Frequency')
     histogram_plot.get_figure().savefig(
-        join(output, 'histogram.png'), dpi = 300)
+        join(output, 'histogram.png'), dpi=300)
     histogram_plot.get_figure().savefig(
-        join(output, 'histogram.pdf'), dpi = 300)
+        join(output, 'histogram.pdf'), dpi=300)
 
     # Clear plots
     plt.gcf().clear()
 
     # OTU Rank abundance
-    otuRA = ((table.sum(axis="observation") / results['total_counts'])/ 100)
-    otu_rank = pd.DataFrame(data = otuRA, index = table.ids(axis='observation'))
-    otu_rank.columns = ['Abundance']
-    otu_rank_sorted = otu_rank.sort_values('Abundance', ascending = False).head(30)
-    otu_rank_plot = sns.pointplot(x = otu_rank_sorted.index,
-                                  y = otu_rank_sorted.Abundance,
-                                  data = otu_rank_sorted)
-    otu_rank_plot.set_title('OTU Rank Abundance')
-    otu_rank_plot.set_yscale('log')
-    otu_rank_plot.set_xlabel('Abundance Rank')
-    otu_rank_plot.set_ylabel('Relative Abundance (log)')
-    otu_rank_plot.set(xticklabels=[])
-    otu_rank_plot.get_figure().savefig(
-        join(output, 'rank_abundance.png'), dpi = 300)
-    otu_rank_plot.get_figure().savefig(
-        join(output, 'rank_abundance.pdf'), dpi = 300)
+    otuRA = ((table.sum(axis="observation") / results['total_counts'])/100)
+    rank = pd.DataFrame(data=otuRA, index=table.ids(axis='observation'))
+    rank.columns = ['Abundance']
+    rank_sorted = otu_rank.sort_values('Abundance', ascending=False).head(30)
+    rank_plot = sns.pointplot(x=otu_rank_sorted.index,
+                              y=otu_rank_sorted.Abundance,
+                              data=rank_sorted)
+    rank_plot.set_title('OTU Rank Abundance')
+    rank_plot.set_yscale('log')
+    rank_plot.set_xlabel('Abundance Rank')
+    rank_plot.set_ylabel('Relative Abundance (log)')
+    rank_plot.set(xticklabels=[])
+    rank_plot.get_figure().savefig(
+        join(output, 'rank_abundance.png'), dpi=300)
+    rank_plot.get_figure().savefig(
+        join(output, 'rank_abundance.pdf'), dpi=300)
 
     # Add variables to jinja2 template
-    env = Environment(loader = PackageLoader('q2_summarizer', 'templates'))
+    env = Environment(loader=PackageLoader('q2_summarizer', 'templates'))
     template = env.get_template('otu-table.html')
     output_from_parsed_template = template.render(
-        samples = str(results['samples']),
-        total_otu = str(results['total_otu']),
-        total_counts = str(results['total_counts']),
-        density = str(results['density']),
-        mean = str(results['mean']),
-        median = str(results['median']),
-        range_value = str(range_value),
-        std = str(results['std']),
-        table = depth_df
+        samples=str(results['samples']),
+        total_otu=str(results['total_otu']),
+        total_counts=str(results['total_counts']),
+        density=str(results['density']),
+        mean=str(results['mean']),
+        median=str(results['median']),
+        range_value=str(range_value),
+        std=str(results['std']),
+        table=depth_df
     )
 
     # Write HTML file to disk
