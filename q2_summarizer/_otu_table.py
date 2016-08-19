@@ -1,5 +1,7 @@
 import os
 from os.path import abspath, dirname, join, isdir
+import jinja2
+from jinja2 import Environment, FileSystemLoader, PackageLoader
 from distutils.dir_util import copy_tree
 import pandas as pd
 import biom
@@ -8,17 +10,11 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import statistics
 
-SKIN = "green"
 
 def otu_table(output_dir: str, table: biom.Table) -> None:
 
-    # Set output directory location
     output = join(output_dir, 'q2-summarizer-resources/')
-
-    # Get summary stats
     results, df = _get_summary_stats(table)
-
-    # Set range as a varibale
     range_value = '{}-{}'.format(results['minimum'], results['maximum'])
 
     # Move HTML resources to directory
@@ -26,10 +22,11 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
     current_dir_path = dirname(current_file_path)
     copy_tree(join(current_dir_path, "dist/"), join(output, "dist/"))
 
+    # Make depths dataframe html
+    depth_df = df.to_html(index = False, classes = ['table', 'table-bordered', 'table-hover', 'datatables'])
+
     # Make histogram plot and save to disk
     sns.set_style("whitegrid")
-
-    # Sampling depth histogram
     histogram_plot = sns.distplot(a = results['depths'],
                                   kde = False,
                                   rug = True,
@@ -64,48 +61,26 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
     otu_rank_plot.get_figure().savefig(
         join(output, 'rank_abundance.pdf'), dpi = 300)
 
+    # Add variables to jinja2 template
+    env = Environment(loader = PackageLoader('q2_summarizer', 'templates'))
+    template = env.get_template('otu-table.html')
+    output_from_parsed_template = template.render(
+        samples = str(results['samples']),
+        total_otu = str(results['total_otu']),
+        total_counts = str(results['total_counts']),
+        density = str(results['density']),
+        mean = str(results['mean']),
+        median = str(results['median']),
+        range_value = str(range_value),
+        std = str(results['std']),
+        table = depth_df
+    )
+
     # Write HTML file to disk
     with open(join(output_dir, "index.html"), 'w') as html:
+        html.write(output_from_parsed_template)
 
-        # Header
-        html.write(_HEADER)
-
-        # Row 1
-        html.write(_ROW)
-        html.write(_make_sbox(title= 'Number of samples',
-                              value = results['samples'],
-                              color = "red"))
-        html.write(_make_sbox(title= 'Number of OTUs',
-                              value = results['total_otu'],
-                              color = "orange"))
-        html.write(_make_sbox(title= 'Total sequencing depth',
-                              value = results['total_counts'],
-                              color = "yellow"))
-        html.write(_make_sbox(title= 'Density of non-zeros',
-                              value = results['density'],
-                              color = "green"))
-        html.write(_CLOSE)
-
-        # Row 2
-        html.write(_ROW)
-        html.write(_make_sbox(title = 'Mean',
-                              value = results['mean']))
-        html.write(_make_sbox(title = 'Median',
-                              value = results['median']))
-        html.write(_make_sbox(title= 'Range',
-                              value = range_value))
-        html.write(_make_sbox(title= 'Standard deviation',
-                              value = results['std']))
-        html.write(_CLOSE)
-
-        # Row 3 Plots
-        html.write(_PLOTS)
-
-        # Row 4 Table
-        html.write(_make_datatable(df))
-
-        # Footer
-        html.write(_FOOTER)
+    return(None)
 
 
 def _get_summary_stats(table):
@@ -136,163 +111,3 @@ def _get_summary_stats(table):
                'density': str(density) + "%",
                'depths': depths}
     return(results, depths_table)
-
-def _make_sbox(title = 'Title',
-               value = 18,
-               icon = 'ion-pie-graph',
-               color = 'blue'):
-    return('''
-            <div class="col-lg-3 col-xs-6">
-                <div class="small-box bg-''' + color + '''">
-                    <div class="inner">
-                        <h3>''' + str(value) + '''</h3>
-                        <p>''' + str(title) + '''</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ''' + icon + '''"></i>
-                    </div>
-                </div>
-            </div>
-    ''')
-
-
-def _make_datatable(table):
-    return('''
-            <div class="row">
-              <div class="col-md-12">
-                <div class="box box-solid">
-                  <div class="box-header with-border">
-                    <h3 class="box-title">Sampling Depths Table</h3>
-                  </div>
-                  <div class="box-body">
-                    <div class="dataTables_wrapper form-inline dt-bootstrap">
-                     ''' + table.to_html(index = False, classes = ['table', 'table-bordered', 'table-hover', 'datatables']) + '''
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-    ''')
-
-
-_OPEN = '<div>'
-_CLOSE = '</div>'
-_ROW = '<div class="row">'
-
-_HEADER = '''
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>QIIME2-Summariser</title>
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <link rel="stylesheet" href="q2-summarizer-resources/dist/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="q2-summarizer-resources/dist/plugins/datatables/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="q2-summarizer-resources/dist/css/font-awesome.min.css">
-  <link rel="stylesheet" href="q2-summarizer-resources/dist/css/ionicons.min.css">
-  <link rel="stylesheet" href="q2-summarizer-resources/dist/css/AdminLTE.min.css">
-  <link rel="stylesheet" href="q2-summarizer-resources/dist/css/skins/_all-skins.min.css">
-</head>
-<body class="hold-transition skin-''' + SKIN + ''' layout-top-nav">
-<div class="wrapper">
-  <header class="main-header">
-    <nav class="navbar navbar-static-top">
-      <div class="container">
-        <div class="navbar-header">
-          <a href="http://qiime.org/" class="navbar-brand">
-            <b>QIIME2-</b>Summarizer
-          </a>
-          <button type="button"
-                  class="navbar-toggle collapsed"
-                  data-toggle="collapse"
-                  data-target="#navbar-collapse">
-            <i class="fa fa-bars"></i>
-          </button>
-        </div>
-        <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li>
-                <a href="#preprocessing">FASTQ data</a>
-            </li>
-            <li>
-                <a href="#preprocessing">Joined PE reads</a>
-            </li>
-            <li>
-                <a href="#preprocessing">Split Libraries (de-multiplexing)</a>
-            </li>
-            <li>
-                <a href="#preprocessing">OTU-Picking</a>
-            </li>
-            <li class="active">
-            <a href="#otu">OTU Table <span class="sr-only">(current)</span></a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </header>
-  <div class="content-wrapper">
-    <div class="container">
-        <section class="content">
-'''
-
-_PLOTS = '''
-<div class="row">
-<div class="col-md-6">
-<div class="box box-solid">
-<div class="box-header with-border">
-<h3 class="box-title">Sampling Depth Histogram</h3>
-<a href="q2-summarizer-resources/histogram.png" class="btn btn-primary btn-sm pull-right" type="button">PNG</a>
-<a href="q2-summarizer-resources/histogram.pdf" class="btn btn-primary btn-sm pull-right" type="button">PDF</a>
-</div>
-<div class="box-body">
-<img class="img-responsive pad" src="q2-summarizer-resources/histogram.png">
-</div>
-</div>
-</div>
-<div class="col-md-6">
-<div class="box box-solid">
-<div class="box-header with-border">
-<h3 class="box-title">OTU Rank Abundance</h3>
-<a href="q2-summarizer-resources/rank_abundance.png" class="btn btn-primary btn-sm pull-right" type="button">PNG</a>
-<a href="q2-summarizer-resources/rank_abundance.pdf" class="btn btn-primary btn-sm pull-right" type="button">PDF</a>
-</div>
-<div class="box-body">
-<img class="img-responsive pad" src="q2-summarizer-resources/rank_abundance.png">
-</div>
-</div>
-</div>
-</div>
-'''
-
-_FOOTER = '''
-</section>
-</div>
-</div>
-<footer class="main-footer">
-<div class="container">
-<div class="pull-left hidden-xs">
-<strong>Summarizer</strong> version 0.0.1
-</div>
-
-<div class="pull-right hidden-xs">
-<strong>
-<a href="http://almsaeedstudio.com">Made with Admin LTE 2.3.6</a>
-</strong>
-</div>
-</div>
-</footer>
-</div>
-<script src="q2-summarizer-resources/dist/plugins/jQuery/jquery-2.2.3.min.js"></script>
-<script src="q2-summarizer-resources/dist/plugins/datatables/dataTables.bootstrap.min.js"></script>
-<script src="q2-summarizer-resources/dist/plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="q2-summarizer-resources/dist/bootstrap/js/bootstrap.min.js"></script>
-<script src="q2-summarizer-resources/dist/js/app.min.js"></script>
-<script>
-$(function () {
-    $(".datatables").DataTable();});
-</script>
-</body>
-</html>
-'''
