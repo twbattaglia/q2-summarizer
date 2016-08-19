@@ -28,14 +28,41 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
 
     # Make histogram plot and save to disk
     sns.set_style("whitegrid")
-    sns_plot = sns.distplot(results['depths'], kde = False,
-                                               rug = True,
-                                               hist = True,
-                                               color='#3498db')
-    sns_plot.set(xlabel = 'Sampling depths', ylabel = 'Frequency')
-    fig = sns_plot.get_figure()
-    fig.savefig(join(output, "histogram.png"), dpi = 300)
-    fig.savefig(join(output, "histogram.pdf"), dpi = 300)
+
+    # Sampling depth histogram
+    histogram_plot = sns.distplot(a = results['depths'],
+                                  kde = False,
+                                  rug = True,
+                                  hist = True,
+                                  color='#3498db')
+    histogram_plot.set_title('Sampling Depths Distribution')
+    histogram_plot.set_xlabel('Sampling Depth')
+    histogram_plot.set_ylabel('Frequency')
+    histogram_plot.get_figure().savefig(
+        join(output, 'histogram.png'), dpi = 300)
+    histogram_plot.get_figure().savefig(
+        join(output, 'histogram.pdf'), dpi = 300)
+
+    # Clear plots
+    plt.gcf().clear()
+
+    # OTU Rank abundance
+    otuRA = ((table.sum(axis="observation") / results['total_counts'])/ 100)
+    otu_rank = pd.DataFrame(data = otuRA, index = table.ids(axis='observation'))
+    otu_rank.columns = ['Abundance']
+    otu_rank_sorted = otu_rank.sort_values('Abundance', ascending = False).head(30)
+    otu_rank_plot = sns.pointplot(x = otu_rank_sorted.index,
+                                  y = otu_rank_sorted.Abundance,
+                                  data = otu_rank_sorted)
+    otu_rank_plot.set_title('OTU Rank Abundance')
+    otu_rank_plot.set_yscale('log')
+    otu_rank_plot.set_xlabel('Abundance Rank')
+    otu_rank_plot.set_ylabel('Relative Abundance (log)')
+    otu_rank_plot.set(xticklabels=[])
+    otu_rank_plot.get_figure().savefig(
+        join(output, 'rank_abundance.png'), dpi = 300)
+    otu_rank_plot.get_figure().savefig(
+        join(output, 'rank_abundance.pdf'), dpi = 300)
 
     # Write HTML file to disk
     with open(join(output_dir, "index.html"), 'w') as html:
@@ -44,7 +71,7 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
         html.write(_HEADER)
 
         # Row 1
-        html.write(_new_row())
+        html.write(_ROW)
         html.write(_make_sbox(title= 'Number of samples',
                               value = results['samples'],
                               color = "red"))
@@ -57,10 +84,10 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
         html.write(_make_sbox(title= 'Density of non-zeros',
                               value = results['density'],
                               color = "green"))
-        html.write(_end())
+        html.write(_CLOSE)
 
         # Row 2
-        html.write(_new_row())
+        html.write(_ROW)
         html.write(_make_sbox(title = 'Mean',
                               value = results['mean']))
         html.write(_make_sbox(title = 'Median',
@@ -69,7 +96,7 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
                               value = range_value))
         html.write(_make_sbox(title= 'Standard deviation',
                               value = results['std']))
-        html.write(_end())
+        html.write(_CLOSE)
 
         # Row 3 Plots
         html.write(_PLOTS)
@@ -147,12 +174,10 @@ def _make_datatable(table):
             </div>
     ''')
 
-def _new_row():
-    return('''<div class="row">''')
 
-def _end():
-    return('''</div>''')
-
+_OPEN = '<div>'
+_CLOSE = '</div>'
+_ROW = '<div class="row">'
 
 _HEADER = '''
 <!DOCTYPE html>
@@ -214,32 +239,30 @@ _HEADER = '''
 
 _PLOTS = '''
 <div class="row">
-  <div class="col-md-6">
-    <div class="box box-solid">
-      <div class="box-header with-border">
-        <h3 class="box-title">Sampling Depth Histogram</h3>
-        <a href="q2-summarizer-resources/histogram.png"
-        class="btn btn-primary btn-sm pull-right" type="button">PNG</a>
-        <a href="q2-summarizer-resources/histogram.pdf"
-        class="btn btn-primary btn-sm pull-right" type="button">PDF</a>
-      </div>
-      <div class="box-body">
-         <img class="img-responsive pad"
-         src="q2-summarizer-resources/histogram.png">
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="box box-solid">
-      <div class="box-header with-border">
-        <h3 class="box-title">OTU Rank Abundance</h3>
-      </div>
-      <div class="box-body">
-         <img class="img-responsive pad"
-         src="q2-summarizer-resources/rank_abundance.png">
-      </div>
-    </div>
-  </div>
+<div class="col-md-6">
+<div class="box box-solid">
+<div class="box-header with-border">
+<h3 class="box-title">Sampling Depth Histogram</h3>
+<a href="q2-summarizer-resources/histogram.png" class="btn btn-primary btn-sm pull-right" type="button">PNG</a>
+<a href="q2-summarizer-resources/histogram.pdf" class="btn btn-primary btn-sm pull-right" type="button">PDF</a>
+</div>
+<div class="box-body">
+<img class="img-responsive pad" src="q2-summarizer-resources/histogram.png">
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="box box-solid">
+<div class="box-header with-border">
+<h3 class="box-title">OTU Rank Abundance</h3>
+<a href="q2-summarizer-resources/rank_abundance.png" class="btn btn-primary btn-sm pull-right" type="button">PNG</a>
+<a href="q2-summarizer-resources/rank_abundance.pdf" class="btn btn-primary btn-sm pull-right" type="button">PDF</a>
+</div>
+<div class="box-body">
+<img class="img-responsive pad" src="q2-summarizer-resources/rank_abundance.png">
+</div>
+</div>
+</div>
 </div>
 '''
 
@@ -249,21 +272,23 @@ _FOOTER = '''
 </div>
 <footer class="main-footer">
 <div class="container">
+<div class="pull-left hidden-xs">
+<strong>Summarizer</strong> version 0.0.1
+</div>
+
 <div class="pull-right hidden-xs">
-  <strong>
-    <a href="http://almsaeedstudio.com">Made with Admin LTE 2.3.6</a>
-  </strong>
+<strong>
+<a href="http://almsaeedstudio.com">Made with Admin LTE 2.3.6</a>
+</strong>
 </div>
 </div>
 </footer>
 </div>
-
 <script src="q2-summarizer-resources/dist/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <script src="q2-summarizer-resources/dist/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script src="q2-summarizer-resources/dist/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="q2-summarizer-resources/dist/bootstrap/js/bootstrap.min.js"></script>
 <script src="q2-summarizer-resources/dist/js/app.min.js"></script>
-
 <script>
 $(function () {
     $(".datatables").DataTable();});
