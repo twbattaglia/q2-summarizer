@@ -17,6 +17,6 @@ plugin.visualizers.register_function(
     inputs={'table': FeatureTable[Frequency]},
     parameters={},
     name='Visualize and summarize data',
-    description='Visualize data from an OTU table and generate plots related to'
-                'sampling depths and OTU abundances.'
+    description='Visualize data from an OTU table and generate plots related'
+                'to sampling depths and OTU abundances.'
 )

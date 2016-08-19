@@ -1,13 +1,11 @@
-import os
-from os.path import abspath, dirname, join, isdir
-import jinja2
-from jinja2 import Environment, FileSystemLoader, PackageLoader
-from distutils.dir_util import copy_tree
-import pandas as pd
 import biom
 from biom.util import compute_counts_per_sample_stats
-import seaborn as sns
+from distutils.dir_util import copy_tree
+from jinja2 import Environment, PackageLoader
 import matplotlib.pyplot as plt
+from os.path import abspath, dirname, join
+import pandas as pd
+import seaborn as sns
 import statistics
 
 
