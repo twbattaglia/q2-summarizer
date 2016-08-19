@@ -40,6 +40,14 @@ qiime summarizer otu-table --i-table feature-table-frequency.qza --o-visualizati
 qiime tools view summarize_out.qzv
 ```
 
+## Future/Current features 
+- [ ] fastq-reads : Summarize raw fastq files.
+- [ ] joined-pe : Summarize after merging PE reads.
+- [ ] split-libraries : Summarize after de-multiplexing.
+- [ ] otu-picking : Summarize after OTU-picking/other methods.
+- [x] otu-table : Summarize an OTU-table with absolute counts.
+
+
 ## History
 
 TODO: Write history
