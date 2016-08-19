@@ -14,7 +14,7 @@ setup(
     name="q2-summarizer",
     version=version,
     packages=find_packages(),
-    install_requires=['qiime >= 2.0.0', 'pandas', 'biom-format', 'seaborn'],
+    install_requires=['qiime >= 2.0.0', 'pandas', 'biom-format', 'seaborn', 'jinja2'],
     author="Thomas W. Battaglia",
     author_email="tb1280@nyu.edu",
     description="QIIME2 plugin for generating interactive summary data",
