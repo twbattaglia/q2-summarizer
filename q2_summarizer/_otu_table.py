@@ -23,7 +23,13 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
     # Make depths dataframe html
     depth_df = df.to_html(
         index=False,
-        classes=['table', 'table-bordered', 'table-hover', 'datatables'])
+        classes=[
+            'table',
+            'table-bordered',
+            'table-hover',
+            'datatables',
+            'compact'
+        ])
 
     # Make histogram plot and save to disk
     sns.set_style("whitegrid")
@@ -47,9 +53,9 @@ def otu_table(output_dir: str, table: biom.Table) -> None:
     otuRA = ((table.sum(axis="observation") / results['total_counts'])/100)
     rank = pd.DataFrame(data=otuRA, index=table.ids(axis='observation'))
     rank.columns = ['Abundance']
-    rank_sorted = otu_rank.sort_values('Abundance', ascending=False).head(30)
-    rank_plot = sns.pointplot(x=otu_rank_sorted.index,
-                              y=otu_rank_sorted.Abundance,
+    rank_sorted = rank.sort_values('Abundance', ascending=False).head(30)
+    rank_plot = sns.pointplot(x=rank_sorted.index,
+                              y=rank_sorted.Abundance,
                               data=rank_sorted)
     rank_plot.set_title('OTU Rank Abundance')
     rank_plot.set_yscale('log')

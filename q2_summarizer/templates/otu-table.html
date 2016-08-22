@@ -5,21 +5,23 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <title>QIIME2-Summariser</title>
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-      <link rel="stylesheet" href="q2-summarizer-resources/dist/bootstrap/css/bootstrap.min.css">
-      <link rel="stylesheet" href="q2-summarizer-resources/dist/plugins/datatables/jquery.dataTables.min.css">
-      <link rel="stylesheet" href="q2-summarizer-resources/dist/css/font-awesome.min.css">
-      <link rel="stylesheet" href="q2-summarizer-resources/dist/css/ionicons.min.css">
-      <link rel="stylesheet" href="q2-summarizer-resources/dist/css/AdminLTE.min.css">
-      <link rel="stylesheet" href="q2-summarizer-resources/dist/css/skins/_all-skins.min.css">
+      <link rel="stylesheet" type="text/css" href="./q2-summarizer-resources/dist/bootstrap/css/bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" href="./q2-summarizer-resources/dist/css/AdminLTE.min.css">
+
+      <link rel="stylesheet" type="text/css" href="./q2-summarizer-resources/dist/plugins/DataTables/datatables.min.css"/>
+
+      <link rel="stylesheet" type="text/css" href="./q2-summarizer-resources/dist/css/skins/_all-skins.min.css">
+      <link rel="stylesheet" type="text/css" href="./q2-summarizer-resources/dist/css/font-awesome.min.css">
+      <link rel="stylesheet" type="text/css" href="./q2-summarizer-resources/dist/css/ionicons.min.css">
    </head>
-   <body class="hold-transition skin-green layout-top-nav">
+   <body class="hold-transition skin-purple layout-top-nav">
       <div class="wrapper">
          <header class="main-header">
             <nav class="navbar navbar-static-top">
                <div class="container">
                   <div class="navbar-header">
                      <a href="http://qiime.org/" class="navbar-brand">
-                       <b>QIIME2-</b>Summarizer
+                       <b>QIIME2 </b>Summarizer
                      </a>
                      <button type="button"
                         class="navbar-toggle collapsed"
@@ -30,21 +32,11 @@
                   </div>
                   <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                      <ul class="nav navbar-nav">
-                        <li>
-                           <a href="#preprocessing">FASTQ data</a>
-                        </li>
-                        <li>
-                           <a href="#preprocessing">Joined PE reads</a>
-                        </li>
-                        <li>
-                           <a href="#preprocessing">Split Libraries (de-multiplexing)</a>
-                        </li>
-                        <li>
-                           <a href="#preprocessing">OTU-Picking</a>
-                        </li>
-                        <li class="active">
-                           <a href="#otu">OTU Table <span class="sr-only">(current)</span></a>
-                        </li>
+                        <li><a href="#preprocessing">FASTQ data</a></li>
+                        <li><a href="#preprocessing">Joined PE reads</a></li>
+                        <li><a href="#preprocessing">Split Libraries (de-multiplexing)</a></li>
+                        <li><a href="#preprocessing">OTU-Picking</a></li>
+                        <li class="active"><a href="#otu">OTU Table <span class="sr-only">(current)</span></a></li>
                      </ul>
                   </div>
                </div>
@@ -199,14 +191,18 @@
             </div>
          </footer>
       </div>
-      <script src="q2-summarizer-resources/dist/plugins/jQuery/jquery-2.2.3.min.js"></script>
-      <script src="q2-summarizer-resources/dist/plugins/datatables/dataTables.bootstrap.min.js"></script>
-      <script src="q2-summarizer-resources/dist/plugins/datatables/jquery.dataTables.min.js"></script>
-      <script src="q2-summarizer-resources/dist/bootstrap/js/bootstrap.min.js"></script>
-      <script src="q2-summarizer-resources/dist/js/app.min.js"></script>
+      <script type="text/javascript" src="q2-summarizer-resources/dist/plugins/jQuery/jquery-2.2.3.min.js"></script>
+      <script type="text/javascript" src="q2-summarizer-resources/dist/bootstrap/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="q2-summarizer-resources/dist/plugins/DataTables/datatables.min.js"></script>
+      <script type="text/javascript" src="q2-summarizer-resources/dist/js/app.min.js"></script>
       <script>
          $(function () {
-             $(".datatables").DataTable();});
+             $(".datatables").DataTable({
+               fixedHeader: true,
+               "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+               buttons: ['copy', 'excel', 'csv']
+             })
+           });
       </script>
    </body>
 </html>
